@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Alert from "../components/Alert";
 import axios from "axios";
 
-
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,11 +38,14 @@ const Register = () => {
     setAlert({})
     
     try {
-      const { data } = await axios.post("http://localhost:4000/api/user", {
-        name,
-        email,
-        password,
-      });
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
       
       setAlert({
         msg: data.msg,

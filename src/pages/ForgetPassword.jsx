@@ -1,6 +1,43 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios  from "axios";
+import Alert from "../components/Alert";
 
 const ForgetPassword = () => {
+  const [email, setEmail] = useState("");
+  const [alert, setAlert] = useState({});
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (email === "" || email.length < 6) {
+      setAlert({
+        msg: "Email is required",
+        error: true
+      });
+      return
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/forget-password`, { email }
+      );
+
+      setAlert({
+        msg: data.msg,
+        error: false
+      });
+      
+    } catch (error) {
+      setAlert({
+        msg: error.response.data.msg,
+        error: true
+      });
+    }
+  };
+
+  const { msg } = alert;
+
   return (
     <>
       <h1 className="text-sky-600 text-center font-black text-5xl capitalize">
@@ -10,7 +47,12 @@ const ForgetPassword = () => {
         </span>
       </h1>
 
-      <form className="my-10 bg-white shadow rounded-lg p-10">
+      {msg && <Alert alert={alert} />}
+
+      <form
+        onSubmit={handleSubmit}
+        className="my-10 bg-white shadow rounded-lg p-10">
+        
         <div className="my-5">
           <label
             htmlFor="email"
@@ -23,6 +65,8 @@ const ForgetPassword = () => {
             type="email"
             placeholder="Choose your Email"
             className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
