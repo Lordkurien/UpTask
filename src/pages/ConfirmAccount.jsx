@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import axiosClient from "../config/axiosClient";
 import Alert from "../components/Alert";
 
 const ConfirmAccount = () => {
@@ -13,8 +13,8 @@ const ConfirmAccount = () => {
   useEffect(() => {
     const confirmAccount = async () => {
       try {
-        const url = `http://localhost:4000/api/user/confirm/${id}`;
-        const { data } = await axios(url);
+        const url = `/user/confirm/${id}`;
+        const { data } = await axiosClient(url);
 
         setAlert({
           msg: data.msg,
