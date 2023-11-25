@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Alert from "../components/Alert";
 import axiosClient from "../config/axiosClient";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState({});
+
+  const { setAuth } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +26,7 @@ const Login = () => {
       const { data } = await axiosClient.post("/user/login", { email, password });
       setAlert({});
       localStorage.setItem("token", data.token);
+      setAuth(data);
 
     } catch (error) {
       setAlert({
