@@ -10,6 +10,7 @@ import NewPassword from "./pages/NewPassword";
 import ConfirmAccount from "./pages/ConfirmAccount";
 import Projects from "./pages/Projects";
 import NewProject from "./pages/NewProject";
+import Project from "./pages/Project";
 
 import { AuthProvider } from "./context/AuthProvider";
 import { ProjectsProvider } from "./context/ProjectsProvider";
@@ -58,6 +59,11 @@ const App = () => {
               <Route
                 path="new-project"
                 element={<NewProject />}
+              />
+
+              <Route
+                path=":id"
+                element={<Project />}
               />
             </Route>
           </Routes>
