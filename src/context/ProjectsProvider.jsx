@@ -46,34 +46,82 @@ const ProjectsProvider = ({ children }) => {
     };
 
     const submitProject = async (project) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) return
-
-            const config = {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            };
-
-            const { data } = await axiosClient.post("/projects", project, config);
-            setProjects([...projects, data]);
-
-            setAlert({
-              msg: "New project has been created",
-              error: false,
-            });
-
-            setTimeout(() => {
-              setAlert({});
-              navigate("/projects");
-            }, 3000);
-
-        } catch (error) {
-            console.log(error);
-        }
+      if (project.id) {
+          await editProject(project);
+      } else {
+          await newProject(project);
+      }
     };
+    
+    const editProject = async(project) => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const { data } = await axiosClient.put(
+          `/projects/${project.id}`,
+          project,
+          config
+        );
+
+        // Sync state
+        const updatedProject = projects.map((projectState) =>
+          projectState._id === data._id ? data : projectState
+        );
+        setProjects(updatedProject);
+
+        //show alert
+        setAlert({
+          msg: " Your project has been updated",
+          error: false,
+        });
+
+        //redirect
+        setTimeout(() => {
+          setAlert({});
+          navigate("/projects");
+        }, 3000);
+
+      } catch (error) {
+        console.error("Error fetching projects:", error.response || error);
+      }
+    };
+    
+  const newProject = async (project) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axiosClient.post("/projects", project, config);
+      setProjects([...projects, data]);
+
+      setAlert({
+        msg: "New project has been created",
+        error: false,
+      });
+
+      setTimeout(() => {
+        setAlert({});
+        navigate("/projects");
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
     
     const getProject = async (id) => {
       setLoading(true);

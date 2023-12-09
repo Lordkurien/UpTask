@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import useProjects from "../hooks/useProjects";
 import Alert from "./Alert";
 
 const FormProject = () => {
+    const [id, setId] = useState(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState("");
     const [client, setClient] = useState("");
 
-    const { showAlert, alert, submitProject } = useProjects();
+    const params = useParams();
+
+    const { showAlert, alert, submitProject, project } = useProjects();
+
+    useEffect(() => {
+        if (params.id) {
+            setId(project._id);
+            setName(project.name);
+            setDescription(project.description);
+            setDeadline(project.deadline?.split("T")[0]);
+            setClient(project.client);
+        }
+    }, [params]);
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -21,13 +35,16 @@ const FormProject = () => {
             return
         }
 
+        // share data with the provider
         await submitProject({
             name,
             description,
             deadline,
-            client
+            client,
+            id
         });
 
+        setId(null);
         setName("");
         setDescription("");
         setDeadline("");
@@ -111,7 +128,10 @@ const FormProject = () => {
                 />
             </div>
 
-            <input type="submit" value="create project" className="bg-sky-600 p-3 uppercase font-bold text-white rounded cursor-pointer hover:bg-sky-700 transition-colors" />
+            <input
+                type="submit"
+                value={id ? "Edit Project" : "Create Project"}
+                className="bg-sky-600 p-3 uppercase font-bold text-white rounded cursor-pointer hover:bg-sky-700 transition-colors" />
         </form>
     );
 };
