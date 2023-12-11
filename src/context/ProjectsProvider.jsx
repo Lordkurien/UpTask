@@ -10,6 +10,7 @@ const ProjectsProvider = ({ children }) => {
     const [alert, setAlert] = useState({});
     const [project, setProject] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [modalFormTask, setModalFormTask] = useState(false);
 
     const navigate = useNavigate();
 
@@ -161,7 +162,7 @@ const ProjectsProvider = ({ children }) => {
 
         const { data } = await axiosClient.delete(`/projects/${id}`, config);
 
-        // state
+        // sync state
         const updatedProjects = projects.filter(stateProject => stateProject._id !== id);
         setProjects(updatedProjects);
 
@@ -178,6 +179,10 @@ const ProjectsProvider = ({ children }) => {
       } catch (error) {
         console.log(error);
       }
+    };
+    
+    const handleModalTask = () => {
+      setModalFormTask(!modalFormTask);
     }
 
     return (
@@ -191,6 +196,8 @@ const ProjectsProvider = ({ children }) => {
           project,
           loading,
           deleteProject,
+          modalFormTask,
+          handleModalTask
         }}
       >
         {children}
