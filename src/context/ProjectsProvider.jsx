@@ -146,10 +146,52 @@ const ProjectsProvider = ({ children }) => {
         setLoading(false);
       }
     };
+    
+    const deleteProject = async(id) => {
+      try {
+         const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+        };
+
+        const { data } = await axiosClient.delete(`/projects/${id}`, config);
+
+        // state
+        const updatedProjects = projects.filter(stateProject => stateProject._id !== id);
+        setProjects(updatedProjects);
+
+        setAlert({
+          msg: data.msg,
+          error: false
+        })
+
+        setTimeout(() => {
+          setAlert({})
+          navigate("/projects")
+        }, 3000);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     return (
       <ProjectsContext.Provider
-        value={{ projects, showAlert, alert, submitProject, getProject, project, loading }}
+        value={{
+          projects,
+          showAlert,
+          alert,
+          submitProject,
+          getProject,
+          project,
+          loading,
+          deleteProject,
+        }}
       >
         {children}
       </ProjectsContext.Provider>
