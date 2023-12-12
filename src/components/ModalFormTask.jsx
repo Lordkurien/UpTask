@@ -1,11 +1,38 @@
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import useProjects from '../hooks/useProjects';
+import Alert from './Alert';
+import { useParams } from "react-router-dom";
 
+const PRIORITY = ["low", "middle", "high"];
 
 const ModalFormularioTarea = () => {
     
-    const { modalFormTask, handleModalTask } = useProjects();
+  const [name, setName] = useState({});
+  const [description, setDescription] = useState({});
+  const [deadline, setDeadline] = useState({});
+  const [priority, setPriority] = useState({});
+
+  const params = useParams();
+
+  const { modalFormTask, handleModalTask, showAlert, alert, taskSubmit } = useProjects();
+      
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if ([name, description, deadline, priority].includes("")) {
+      console.log("Todos los campos son obligatorios");
+
+      showAlert({
+        msg: "All fields are required",
+        error: true
+      })
+      return;
+    }
+    taskSubmit({ name, description, priority, deadline, project: params.id});
+  };
+
+  const { msg } = alert;
  
     return (
       <Transition.Root
@@ -76,9 +103,90 @@ const ModalFormularioTarea = () => {
                       as="h3"
                       className="text-lg leading-6 font-bold text-gray-900"
                     >
-                      <h1 className="text-4xl">Title</h1>
+                      New Task
                     </Dialog.Title>
-                    <p>Content</p>
+
+                    {msg && <Alert alert={alert} />}
+
+                    <form
+                      onSubmit={handleSubmit}
+                      className="my-10"
+                    >
+                      <div className="mb-5">
+                        <label
+                          htmlFor="name"
+                          className="text-gray-700 uppercase font-bold text-sm"
+                        >
+                          Name
+                        </label>
+                        <input
+                          id="name"
+                          type="text"
+                          placeholder="task name"
+                          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="mb-5">
+                        <label
+                          htmlFor="description"
+                          className="text-gray-700 uppercase font-bold text-sm"
+                        >
+                          Description
+                        </label>
+                        <textarea
+                          id="description"
+                          placeholder="task description"
+                          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="mb-5">
+                        <label
+                          htmlFor="deadline"
+                          className="text-gray-700 uppercase font-bold text-sm"
+                        >
+                          Deadline
+                        </label>
+                        <input
+                          id="deadline"
+                          type="date"
+                          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                          value={deadline}
+                          onChange={(e) => setDeadline(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="mb-5">
+                        <label
+                          htmlFor="priority"
+                          className="text-gray-700 uppercase font-bold text-sm"
+                        >
+                          Priority
+                        </label>
+                        <select
+                          id="priority"
+                          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                          value={priority}
+                          onChange={(e) => setPriority(e.target.value)}
+                        >
+                          <option value="">-- Select --</option>
+                          {PRIORITY.map((option) => (
+                            <option key={option}>{option}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <input
+                        type="submit"
+                        className="bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm"
+                        value="Create Task"
+                      />
+                    </form>
                   </div>
                 </div>
               </div>

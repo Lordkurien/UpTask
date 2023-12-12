@@ -150,7 +150,7 @@ const ProjectsProvider = ({ children }) => {
     
     const deleteProject = async(id) => {
       try {
-         const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         if (!token) return;
 
         const config = {
@@ -184,6 +184,26 @@ const ProjectsProvider = ({ children }) => {
     const handleModalTask = () => {
       setModalFormTask(!modalFormTask);
     }
+    
+    const taskSubmit = async(task) => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const { data } = await axiosClient.post("/tasks", task, config);
+        console.log(data);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     return (
       <ProjectsContext.Provider
@@ -197,7 +217,8 @@ const ProjectsProvider = ({ children }) => {
           loading,
           deleteProject,
           modalFormTask,
-          handleModalTask
+          handleModalTask,
+          taskSubmit,
         }}
       >
         {children}
