@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import useProjects from '../hooks/useProjects';
 import Alert from './Alert';
@@ -8,16 +8,36 @@ const PRIORITY = ["low", "middle", "high"];
 
 const ModalFormularioTarea = () => {
     
-  const [name, setName] = useState({});
-  const [description, setDescription] = useState({});
-  const [deadline, setDeadline] = useState({});
-  const [priority, setPriority] = useState({});
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const [description, setDescription] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [priority, setPriority] = useState("");
 
   const params = useParams();
 
-  const { modalFormTask, handleModalTask, showAlert, alert, taskSubmit } = useProjects();
-      
-  const handleSubmit = e => {
+  const { modalFormTask, handleModalTask, showAlert, alert, taskSubmit, task } = useProjects();
+
+  useEffect(() => {
+    if (task?._id) {
+      setName(task.name || "");
+      setId(task._id || "");
+      setDescription(task.description || "");
+      setDeadline(task.deadline?.split("T")[0] || "");
+      setPriority(task.priority || "");
+
+      return
+    } 
+    
+    setName("");
+    setId("");
+    setDescription("");
+    setDeadline("");
+    setPriority("");
+
+  }, [task])
+  
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if ([name, description, deadline, priority].includes("")) {
@@ -29,7 +49,14 @@ const ModalFormularioTarea = () => {
       })
       return;
     }
-    taskSubmit({ name, description, priority, deadline, project: params.id});
+    await taskSubmit({ id, name, description, priority, deadline, project: params.id });
+    
+    setId("")
+    setName("")
+    setDescription("")
+    setDeadline("")
+    setPriority("")
+    
   };
 
   const { msg } = alert;
@@ -103,7 +130,7 @@ const ModalFormularioTarea = () => {
                       as="h3"
                       className="text-lg leading-6 font-bold text-gray-900"
                     >
-                      New Task
+                      {id ? "Edit  Task" : "Create New Task"}
                     </Dialog.Title>
 
                     {msg && <Alert alert={alert} />}
@@ -184,7 +211,7 @@ const ModalFormularioTarea = () => {
                       <input
                         type="submit"
                         className="bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm"
-                        value="Create Task"
+                        value={id ? "Save Changes" : "Create new Task"}
                       />
                     </form>
                   </div>

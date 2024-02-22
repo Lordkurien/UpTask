@@ -9,7 +9,7 @@ const Alert = ({ alert }) => {
 };
 
 Alert.propTypes = {
-  alert: PropTypes.shape({
+    alert: PropTypes.shape({
     error: PropTypes.bool.isRequired,
     msg: PropTypes.string.isRequired,
   }).isRequired,

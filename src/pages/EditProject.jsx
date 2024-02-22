@@ -57,7 +57,10 @@ const EditProject = () => {
 
             <button
               onClick={handleClick}
-              className="uppercase font-bold">Delete</button>
+              className="uppercase font-bold">
+              Delete
+            </button>
+            
           </div>
         </div>
         <div className="mt-10 flex justify-center">
@@ -67,4 +70,4 @@ const EditProject = () => {
     );
 };
 
-export default EditProject
+export default EditProject;

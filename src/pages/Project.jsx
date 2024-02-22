@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import useProjects from "../hooks/useProjects";
 import ModalFormTask from "../components/ModalFormTask";
+import ModalDeleteTask from "../components/ModalDeleteTask";
+import Task from "../components/Task";
+import Alert from "../components/Alert";
 
 const Project = () => {
   const params = useParams();
-  const { getProject, project, loading, handleModalTask } = useProjects();
-
-  const [modal, setModal] = useState(false);
+  const { getProject, project, loading, handleModalTask, alert } = useProjects();
 
   useEffect(() => {
     getProject(params.id);
   }, []);
 
   const { name } = project;
+
+  const { msg } = alert;
 
   return loading ? (
     <>
@@ -83,10 +86,40 @@ const Project = () => {
         New Task
       </button>
 
-      <ModalFormTask
-        modal={modal}
-        setModal={setModal}
-      />
+      <p className="font-bold mt-10 text-xl">Project Tasks</p>
+
+      <div className="flex justify-center">
+        <div className=" w-full md:w-1/3 lg:w-1/4">
+          {msg && <Alert alert={alert} />}
+        </div>
+      </div>
+
+      <div className="bg-white shadow rounded-lg mt-10 font-bold">
+        {project.tasks?.length ? (
+          project.tasks?.map((task) => (
+            <Task
+              key={task._id}
+              task={task}
+            />
+          ))
+        ) : (
+          <p className="text-center my-5 p-10 text-xl">
+            There are no tasks in this project
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <p className="font-bold mt-10 text-xl">Team members</p>
+          <Link
+            className="text-gray-400 hover:text-black uppercase font-bold"
+            to={`/projects/add-collaborator/${project._id}`}>
+            Add
+            </Link>
+      </div>
+
+      <ModalFormTask />
+      <ModalDeleteTask />
     </>
   );
 };

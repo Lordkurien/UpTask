@@ -1,0 +1,58 @@
+import { FormatDate } from "../helpers/Date";
+import useProjects from "../hooks/useProjects";
+import PropTypes from "prop-types";
+
+const Task = ({ task }) => {
+  const { handleModalEditTask, handleModalDeleteTask } = useProjects();
+
+  const { description, name, priority, createdAt, _id, state } = task;
+
+  return (
+    <div className="border-b p-5 flex justify-between items-center">
+      <div>
+        <p className="mb-2 text-xl "> {name} </p>
+        <p className="mb-2 text-sm text-gray-500 uppercase "> {description} </p>
+        <p className="mb-2 text-gray-600 "> Priority: {priority} </p>
+        <p className="mb-2 text-sm "> {FormatDate(createdAt)}</p>
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => handleModalEditTask(task)}
+          className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
+        >
+          edit
+        </button>
+
+        {state ? (
+          <button className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
+            complete
+          </button>
+        ) : (
+          <button className="bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
+            incomplete
+          </button>
+        )}
+
+        <button
+          onClick={() => handleModalDeleteTask(task)}
+          className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
+        >
+          delete
+        </button>
+      </div>
+    </div>
+  );
+};
+
+Task.propTypes = {
+  task: PropTypes.shape({
+    description: PropTypes.string,
+    name: PropTypes.string,
+    priority: PropTypes.oneOf(["low", "middle", "high"]),
+    createdAt: PropTypes.string,
+    _id: PropTypes.string,
+    state: PropTypes.bool.isRequired,
+  }).isRequired,
+};
+
+export default Task;

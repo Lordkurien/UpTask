@@ -12,6 +12,7 @@ import Projects from "./pages/Projects";
 import NewProject from "./pages/NewProject";
 import Project from "./pages/Project";
 import EditProject from "./pages/EditProject";
+import AddCollaborator from "./pages/AddCollaborator";
 
 import { AuthProvider } from "./context/AuthProvider";
 import { ProjectsProvider } from "./context/ProjectsProvider";
@@ -60,6 +61,11 @@ const App = () => {
               <Route
                 path="new-project"
                 element={<NewProject />}
+              />
+
+              <Route
+                path="add-collaborator/:id"
+                element={<AddCollaborator />}
               />
 
               <Route
