@@ -221,6 +221,7 @@ const ProjectsProvider = ({ children }) => {
         setProject(updateProject);
         setAlert({});
         setModalFormTask(false);
+        
       } catch (error) {
         console.log(error);
       }
@@ -297,63 +298,77 @@ const ProjectsProvider = ({ children }) => {
       }
     }
     
-    const submitCollaborator = async email => {
-      
-      setLoading(true);
+     const submitCollaborator = async (email) => {
+       setLoading(true);
 
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+       try {
+         const token = localStorage.getItem("token");
+         if (!token) return;
 
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
+         const config = {
+           headers: {
+             "Content-Type": "application/json",
+             Authorization: `Bearer ${token}`,
+           },
+         };
 
-        const { data } = await axiosClient.post("/projects/collaborators",{ email },config);
-        setCollaborator(data);
-        setAlert({});
+         const { data } = await axiosClient.post("/projects/collaborators", { email }, config);
+         
+         setCollaborator(data);
+         setAlert({});
 
-      } catch (error) {
-        setAlert({
-          msg: error.response.data.msg,
-          error: true
-        });
-      }
+       } catch (error) {
+         
+         setAlert({
+           msg: error.response.data.msg,
+           error: true,
+         });
 
-      setLoading(false);
-    }
+         setTimeout(() => {
+           setAlert({});
+         }, 3000);
+       }
+
+       setLoading(false);
+     };
     
-    const addCollaborator = async email => {
-      
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+     const addCollaborator = async (email) => {
+       try {
+         const token = localStorage.getItem("token");
+         if (!token) return;
 
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        
-        const { data } = await axiosClient.post(`/projects/collaborators/${project._id} `, email, config);
-        setAlert({
-          msg: data.msg,
-          error: false
-        });
-        setCollaborator({});
-        setAlert({});
+         const config = {
+           headers: {
+             "Content-Type": "application/json",
+             Authorization: `Bearer ${token}`,
+           },
+         };
 
-      } catch (error) {
-        setAlert({
-          msg: error.response.data.msg,
-          error: true
-        });
-      }
-    }
+         const { data } = await axiosClient.post(`/projects/collaborators/${project._id} `, email, config);
+
+         setAlert({
+           msg: data.msg,
+           error: false,
+         });
+
+         setCollaborator({});
+
+         setTimeout(() => {
+           setAlert({});
+         }, 3000);
+
+       } catch (error) {
+         
+         setAlert({
+           msg: error.response.data.msg,
+           error: true,
+         });
+
+         setTimeout(() => {
+           setAlert({});
+         }, 3000);
+       }
+     };
 
     return (
       <ProjectsContext.Provider
