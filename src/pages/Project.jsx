@@ -8,15 +8,60 @@ import ModalDeleteCollaborator from "../components/ModalDeleteCollaborator";
 import Collaborator from "../components/Collaborator";
 import Task from "../components/Task";
 import Alert from "../components/Alert";
+import io from "socket.io-client";
+
+let socket;
 
 const Project = () => {
   const params = useParams();
-  const { getProject, project, loading, handleModalTask, alert } = useProjects();
+  const {
+    getProject,
+    project,
+    loading,
+    handleModalTask,
+    alert,
+    submitTaskProject,
+    deleteTaskProject,
+    editTaskProject,
+    changeStateTask,
+  } = useProjects();
   const admin = useAdmin();
 
   useEffect(() => {
     getProject(params.id);
   }, []);
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+    socket.emit("open project", params.id);
+  }, [])
+
+  useEffect(() => {
+    socket.on("task added", newTask => {
+      if (newTask.project === project._id) {
+        submitTaskProject(newTask);
+      }
+    });
+
+    socket.on("delete task", (deleteTask) => {
+      if (taskDelete.project === project._id) {
+        deleteTaskProject(deleteTask);
+      }
+    });
+
+    socket.on("edit task", editedTask => {
+      if (editedTask.project === project._id) {
+        editTaskProject(editedTask);
+      }
+    });
+
+    socket.on("new state", newStateTask => {
+      if (newStateTask.project._id === project._id) {
+        changeStateTask(newStateTask);
+      }
+    });
+
+  })
 
   const { name } = project;
   const { msg } = alert;

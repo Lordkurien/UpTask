@@ -2,6 +2,9 @@ import { useState, useEffect, createContext } from "react";
 import axiosClient from "../config/axiosClient";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import io from "socket.io-client";
+
+let socket;
 
 const ProjectsContext = createContext();
 
@@ -41,6 +44,10 @@ const ProjectsProvider = ({ children }) => {
       }
       getProjects();
 
+    }, [])
+  
+  useEffect(() => {
+      socket = io(import.meta.env.VITE_BACKEND_URL);
     }, [])
   
     const showAlert = (alert) => {
@@ -223,12 +230,11 @@ const ProjectsProvider = ({ children }) => {
 
         const { data } = await axiosClient.post("/task", task, config);
 
-        // add task to the state
-        const updateProject = { ...project };
-        updateProject.tasks = [...project.tasks, data];
-        setProject(updateProject);
         setAlert({});
         setModalFormTask(false);
+
+        //Socket io
+        socket.emit("new task", data);
         
       } catch (error) {
         console.log(error);
@@ -248,14 +254,13 @@ const ProjectsProvider = ({ children }) => {
         };
 
         const { data } = await axiosClient.put(`/task/${task.id}`, task, config);
-        console.log(data);
-
-        const updateProject = { ...project }
-        updateProject.tasks = updateProject.tasks.map(taskState => taskState._id === data._id ? data : taskState);
-        setProject(updateProject);
-
+    
         setAlert({});
         setModalFormTask(false);
+
+        //socket
+        socket.emit("edit task", data);
+
       } catch (error) {
         console.log(error);
       }
@@ -290,11 +295,10 @@ const ProjectsProvider = ({ children }) => {
           error:false
         });
         
-        const updateProject = { ...project };
-        updateProject.tasks = updateProject.tasks.filter(taskState => taskState._id !== task._id)
-        
-        setProject(updateProject);
         setModalDeleteTask(false);
+
+        socket.emit("delete task", task);
+
         setTask({});
 
         setTimeout(() => {
@@ -437,11 +441,11 @@ const ProjectsProvider = ({ children }) => {
 
         const { data } = await axiosClient.post(`/task/state/${id}`, {}, config);
 
-        const projectUpdate = { ...project };
-        projectUpdate.tasks = projectUpdate.tasks.map(taskState => taskState._id === data._id ? data : taskState);
-        setProject({ projectUpdate });
         setTask({});
         setAlert({});
+
+        //socket
+        socket.emit("completed task", task);
 
       } catch (error) {
         console.log(error.response);
@@ -450,6 +454,42 @@ const ProjectsProvider = ({ children }) => {
      
      const handleSearch = () => {
       setSearch(!search);
+     }
+     
+     //socket io
+     const submitTaskProject = (task) => {
+      
+       // add task to the state
+       const updateProject = { ...project };
+       updateProject.tasks = [...updateProject.tasks, task];
+       setProject(updateProject);
+     }
+     
+     const deleteTaskProject = task => {
+      
+      const updateProject = { ...project };
+      updateProject.tasks = updateProject.tasks.filter(
+        (taskState) => taskState._id !== task._id
+      );
+      setProject(updateProject);
+     }
+     
+     const editTaskProject = task => {
+      
+      const updateProject = { ...project };
+      updateProject.tasks = updateProject.tasks.map((taskState) =>
+        taskState._id === task._id ? task : taskState
+      );
+      setProject(updateProject);
+     }
+     
+  const changeStateTask = task => {
+       
+      const projectUpdate = { ...project };
+      projectUpdate.tasks = projectUpdate.tasks.map((taskState) =>
+        taskState._id === task._id ? task : taskState
+      );
+      setProject({ projectUpdate });
      }
 
     return (
@@ -481,6 +521,10 @@ const ProjectsProvider = ({ children }) => {
           completeTask,
           handleSearch,
           search,
+          submitTaskProject,
+          deleteTaskProject,
+          editTaskProject,
+          changeStateTask,
         }}
       >
         {children}

@@ -16,7 +16,11 @@ const Task = ({ task }) => {
         <p className="mb-2 text-sm text-gray-500 uppercase "> {description} </p>
         <p className="mb-2 text-gray-600 "> Priority: {priority} </p>
         <p className="mb-2 text-sm "> {FormatDate(createdAt)}</p>
-        {state && <p className="text-xs bg-green-600 uppercase p-1 rounded-lg text-white">Completed by: {task.completed.name} </p> }
+        {state && task.completed && (
+          <p className="text-xs bg-green-600 uppercase p-1 rounded-lg text-white">
+            Completed by: {task.completed.name}
+          </p>
+        )}
       </div>
       <div className="flex flex-col lg:flex-row gap-2">
         {admin && (
@@ -30,7 +34,9 @@ const Task = ({ task }) => {
 
         <button
           onClick={() => completeTask(_id)}
-          className={`${state ? "bg-sky-600" : "bg-gray-600"} px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
+          className={`${
+            state ? "bg-sky-600" : "bg-gray-600"
+          } px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
         >
           {state ? "Complete" : "Incomplete"}
         </button>
