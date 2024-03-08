@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
+import useProjects from "../hooks/useProjects";
+import Search from "./Search";
 
 const Header = () => {
+  const { handleSearch } = useProjects();
+
   return (
     <header className="px-4 py-5 bg-white border-b">
       <div className="md:flex md:justify-between">
@@ -16,6 +20,7 @@ const Header = () => {
           <button
             className="font-bold uppercase"
             type="button"
+            onClick={handleSearch}
           >
             Search
           </button>
@@ -32,6 +37,8 @@ const Header = () => {
           >
             Log out
           </button>
+
+          <Search />
         </div>
       </div>
     </header>
