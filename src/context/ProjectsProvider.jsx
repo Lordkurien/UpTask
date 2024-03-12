@@ -3,6 +3,7 @@ import axiosClient from "../config/axiosClient";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import io from "socket.io-client";
+import useAuth from "../hooks/useAuth";
 
 let socket;
 
@@ -21,30 +22,29 @@ const ProjectsProvider = ({ children }) => {
     const [search, setSearch] = useState(false);
 
     const navigate = useNavigate();
+    const { auth } = useAuth();
 
     useEffect(() => {
       const getProjects = async () => {
         try {
-           const token = localStorage.getItem("token");
-           if (!token) return;
+          const token = localStorage.getItem("token");
+          if (!token) return;
 
-           const config = {
-             headers: {
-               "Content-Type": "application/json",
-               Authorization: `Bearer ${token}`,
-             },
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           };
-          
+
           const { data } = await axiosClient("/projects", config);
           setProjects(data);
-          
         } catch (error) {
           console.log(error);
         }
-      }
+      };
       getProjects();
-
-    }, [])
+    }, [auth]);
   
   useEffect(() => {
       socket = io(import.meta.env.VITE_BACKEND_URL);
@@ -445,7 +445,7 @@ const ProjectsProvider = ({ children }) => {
         setAlert({});
 
         //socket
-        socket.emit("completed task", task);
+        socket.emit("completed task", data);
 
       } catch (error) {
         console.log(error.response);
@@ -483,14 +483,21 @@ const ProjectsProvider = ({ children }) => {
       setProject(updateProject);
      }
      
-  const changeStateTask = task => {
+    const changeStateTask = task => {
        
       const projectUpdate = { ...project };
       projectUpdate.tasks = projectUpdate.tasks.map((taskState) =>
         taskState._id === task._id ? task : taskState
       );
       setProject({ projectUpdate });
+     };
+     
+     const logOutProjects = () => {
+       setProjects([]);
+       setProject({});
+       setAlert({});
      }
+
 
     return (
       <ProjectsContext.Provider
@@ -525,6 +532,7 @@ const ProjectsProvider = ({ children }) => {
           deleteTaskProject,
           editTaskProject,
           changeStateTask,
+          logOutProjects
         }}
       >
         {children}

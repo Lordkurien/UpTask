@@ -33,6 +33,7 @@ const Register = () => {
         msg: "Password must be at least 6 characters long",
         error: true,
       });
+      return;
     }
     
     setAlert({})
@@ -68,18 +69,27 @@ const Register = () => {
 
   return (
     <>
-      <h1 className="text-sky-600 text-center font-black text-5xl capitalize">
-        Create your Account
+      <h1
+        data-cy="title"
+        className="text-sky-600 text-center font-black text-5xl capitalize"
+      >
+        Create your Account {""}
         <span className="text-3xl block text-slate-800">
           and start to manage your Projects
         </span>
       </h1>
 
-      { msg && <Alert alert={alert} />}
+      {msg && (
+        <Alert
+          alert={alert}
+        />
+      )}
 
       <form
+        data-cy="new-account"
         onSubmit={handleSubmit}
-        className="my-10 bg-white shadow rounded-lg p-10">
+        className="my-10 bg-white shadow rounded-lg p-10"
+      >
         <div className="my-5">
           <label
             htmlFor="name"
@@ -88,6 +98,7 @@ const Register = () => {
             Name
           </label>
           <input
+            data-cy="name-input"
             id="name"
             type="text"
             placeholder="What's your name?"
@@ -104,6 +115,7 @@ const Register = () => {
             Email
           </label>
           <input
+            data-cy="email-input"
             id="email"
             type="email"
             placeholder="Choose your Email"
@@ -120,6 +132,7 @@ const Register = () => {
             Password
           </label>
           <input
+            data-cy="password-input"
             id="password"
             type="password"
             placeholder="Choose your Password"
@@ -136,6 +149,7 @@ const Register = () => {
             Repeat your Password
           </label>
           <input
+            data-cy="repeat-password-input"
             id="password2"
             type="password"
             placeholder="Repeat your Password"
@@ -146,6 +160,7 @@ const Register = () => {
         </div>
 
         <input
+          data-cy="submit-new-account"
           type="submit"
           value="Join Now"
           className="bg-sky-700 w-full mb-5 py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
@@ -154,6 +169,7 @@ const Register = () => {
 
       <nav className="lg:flex lg:justify-between">
         <Link
+          data-cy="link-login"
           className="block text-center my-5 text-slate-500 uppercase text-sm"
           to="/"
         >
@@ -170,4 +186,4 @@ const Register = () => {
   );
 };
 
-export default Register
+export default Register;

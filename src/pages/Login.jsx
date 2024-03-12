@@ -43,16 +43,21 @@ const Login = () => {
 
   return (
     <>
-      <h1 className="text-sky-600 text-center font-black text-6xl capitalize">
+      <h1
+        data-cy="title"
+        className="text-sky-600 text-center font-black text-6xl capitalize"
+      >
         Manage your
         <span className="text-6xl text-slate-800"> Projects</span>
       </h1>
 
-      {msg && <Alert alert={alert}/>}
+      {msg && <Alert alert={alert} />}
 
       <form
+        data-cy="form-login"
         onSubmit={handleSubmit}
-        className="my-10 bg-white shadow rounded-lg p-10">
+        className="my-10 bg-white shadow rounded-lg p-10"
+      >
         <div className="my-5">
           <label
             htmlFor="email"
@@ -61,6 +66,7 @@ const Login = () => {
             Email
           </label>
           <input
+            data-cy="email-input"
             id="email"
             type="email"
             placeholder="Registration Email"
@@ -77,6 +83,7 @@ const Login = () => {
             Password
           </label>
           <input
+            data-cy="password-input"
             id="password"
             type="password"
             placeholder="Write your Password"
@@ -87,6 +94,7 @@ const Login = () => {
         </div>
 
         <input
+          data-cy="submit-login"
           type="submit"
           value="Sign In"
           className="bg-sky-700 w-full mb-5 py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
@@ -95,6 +103,7 @@ const Login = () => {
 
       <nav className="lg:flex lg:justify-between">
         <Link
+          data-cy="new-account"
           className="block text-center my-5 text-slate-500 uppercase text-sm"
           to="/register"
         >
