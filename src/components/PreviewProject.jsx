@@ -8,7 +8,6 @@ const PreviewProject = ({ project }) => {
 
   return (
     <div className="border-b p-5 flex flex-col md:flex-row justify-between">
-
       <div className="flex items-center gap-2 ">
         <p className="flex-1">
           {name}
@@ -17,16 +16,21 @@ const PreviewProject = ({ project }) => {
           </span>
         </p>
 
-        {auth._id !== creator &&
-          <p className="p-1 text-sm rounded-lg text-white bg-green-500 font-bold ">Collaborator</p>}
+        {auth._id !== creator && (
+          <p className="p-1 text-sm rounded-lg text-white bg-green-500 font-bold ">
+            Collaborator
+          </p>
+        )}
       </div>
 
-      <Link
-        className="text-gray-600 hover:text-gray-800 font-bold text-sm uppercase"
-        to={`${_id}`}
-      >
-        View Project
-      </Link>
+      <div data-cy="project">
+        <Link
+          className="text-gray-600 hover:text-gray-800 font-bold text-sm uppercase"
+          to={`${_id}`}
+        >
+          View Project
+        </Link>
+      </div>
     </div>
   );
    

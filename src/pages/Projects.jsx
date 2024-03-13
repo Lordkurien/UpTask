@@ -14,7 +14,7 @@ const Projects = () => {
 
       {msg && <Alert alert={alert} />}
       
-      <div className="bg-white shadow mt-10 rounded-lg">
+      <div data-cy="list-projects" className="bg-white shadow mt-10 rounded-lg">
         {projects.length ? (
           projects.map((project) => (
             <PreviewProject
@@ -32,4 +32,4 @@ const Projects = () => {
   );
 }
 
-export default Projects
+export default Projects;

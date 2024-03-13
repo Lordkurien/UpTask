@@ -118,6 +118,7 @@ const Project = () => {
 
       {admin && (
         <button
+          data-cy="new-task"
           onClick={handleModalTask}
           className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-400 hover:bg-sky-600 transition-colors text-white text-center mt-5 flex gap-2 items-center justify-center"
           type="button"

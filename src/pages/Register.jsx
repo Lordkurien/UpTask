@@ -15,10 +15,10 @@ const Register = () => {
 
     if ([name, email, password, repeatPassword].includes("")) {
       setAlert({
-        msg: "All fileds are required",
+        msg: "All fields are required",
         error: true
       });
-      return
+      return;
     }
 
     if (password !== repeatPassword) {
@@ -26,6 +26,7 @@ const Register = () => {
         msg: "Passwords are different",
         error: true,
       });
+      return;
     }
 
     if (password.length < 6) {
