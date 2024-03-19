@@ -1,8 +1,21 @@
-# React + Vite
+# UpTask
+    Welcome to my project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Description
+Project and Task Manager developed with React and Node.js
 
-Currently, two official plugins are available:
+# Installation 
+1. Clone Repository
+2. Install Dependencies: `npm install` in both the project directory 
+3. Start proyect: `npm run dev` in both the project directory to start the server and client
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# How to create an account?
+To create an account, users need to confirm the account, but this can only be done through Mailtrip.
+Until then new updates you can Log In with the following accounts: 
+
+* email: Alejandro27659@gmail.com 
+* password: 987654
+
+* email: hola@gmail.com
+* password: 123456
+

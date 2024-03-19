@@ -19,11 +19,6 @@ const Header = () => {
         <h2 className="text-4xl text-sky-600 font-black text-center mb-5 md:mb-0">
           UpTask
         </h2>
-        <input
-          type="text"
-          placeholder="Search Project"
-          className="rounded-lg lg:w-96 block p-2 border"
-        />
         <div className="flex flex-col md:flex-row items-center gap-4">
           <button
             className="font-bold uppercase"
